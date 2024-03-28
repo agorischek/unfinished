@@ -86,8 +86,11 @@ export class TextNode {
   constructor(el: CstElement) {
     if (isCstNode(el)) {
       const firstChild = el.children.Text[0];
-      if (!isCstNode(firstChild)) this.value = firstChild.image;
-      else throw new Error('Invalid input');
+      if (firstChild && !isCstNode(firstChild)) {
+        this.value = firstChild.image;
+      } else {
+        throw new Error('Invalid input');
+      }
     } else {
       this.value = el.image;
     }

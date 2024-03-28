@@ -1,5 +1,7 @@
 import type { CustomMatcher } from 'bun:test';
+import chalk from 'chalk';
 
+// import { diff } from 'jest-matcher-utils';
 import { parse } from '../parser';
 import { render } from './render';
 
@@ -15,13 +17,21 @@ export const toGenerateHtml: CustomMatcher<unknown, any[]> = (
   if (pass) {
     return {
       message: () =>
-        `expected '${received}' not to generate HTML '${expected}'`,
+        [
+          `Input: ${chalk.dim(`"${received}"`)}`,
+          `Expected HTML: ${chalk.green(expected)}`,
+          `Received HTML: ${chalk.red(html)}`,
+        ].join('\n'),
       pass: true,
     };
   } else {
     return {
       message: () =>
-        `expected '${received}' to generate HTML '${expected}', but got '${html}'`,
+        [
+          `Input: ${chalk.dim(`"${received}"`)}`,
+          `Expected HTML: ${chalk.green(expected)}`,
+          `Received HTML: ${chalk.red(html)}`,
+        ].join('\n'),
       pass: false,
     };
   }
