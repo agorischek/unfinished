@@ -9,3 +9,8 @@ export const Text = createToken({
   name: 'Text',
   pattern: /[^*]+/,
 });
+
+export const InlineCode = createToken({
+  name: 'InlineCode',
+  pattern: /\`/,
+});

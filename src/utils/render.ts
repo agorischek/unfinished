@@ -1,5 +1,5 @@
 import { toHtml } from 'hast-util-to-html';
-import { RootContent } from 'mdast';
+import type { RootContent } from 'mdast';
 import { toHast } from 'mdast-util-to-hast';
 
 export const render = (items: RootContent[]) => {

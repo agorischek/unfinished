@@ -1,14 +1,18 @@
-import { Compatible } from 'unified/lib';
+import { fromMarkdown } from 'mdast-util-from-markdown';
 
 import { parse } from './parser';
 import { print } from './utils/print';
-import { render } from './utils/toHtml';
+import { render } from './utils/render';
 
 // The input string to tokenize
 
-const input = '**This is bold text';
+const input = '#';
 
-const parsed = parse(input);
-// print(parsed);
-const html = render(parsed);
-// console.log(html);
+const tree = fromMarkdown(input);
+
+print(tree);
+
+// const parsed = parse(input);
+// // print(parsed);
+// const html = render(parsed);
+// // console.log(html);
