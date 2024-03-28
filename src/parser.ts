@@ -2,7 +2,7 @@ import { CstParser } from 'chevrotain';
 
 import { lexer } from './lexer';
 import { project } from './projector';
-import { Strong, Text } from './tokens';
+import { InlineCode, Strong, Text } from './tokens';
 import { print } from './utils/print';
 
 class UnfinishedParser extends CstParser {
@@ -15,12 +15,18 @@ class UnfinishedParser extends CstParser {
   public document = this.RULE('document', () => {
     this.OR([
       { ALT: () => this.SUBRULE(this.boldText) },
+      { ALT: () => this.SUBRULE(this.inlineCode) },
       { ALT: () => this.SUBRULE(this.textContent) },
     ]);
   });
 
   public boldText = this.RULE('boldText', () => {
     this.CONSUME(Strong);
+    this.SUBRULE(this.textContent);
+  });
+
+  public inlineCode = this.RULE('inlineCode', () => {
+    this.CONSUME(InlineCode);
     this.SUBRULE(this.textContent);
   });
 

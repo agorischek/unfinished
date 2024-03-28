@@ -1,4 +1,4 @@
-import { CustomMatcher } from 'bun:test';
+import type { CustomMatcher } from 'bun:test';
 
 export const toBeToken: CustomMatcher<any, any[]> = (
   received,

@@ -1,4 +1,4 @@
-import { CustomMatcher } from 'bun:test';
+import type { CustomMatcher } from 'bun:test';
 
 import { parse } from '../parser';
 import { render } from './render';
@@ -14,13 +14,14 @@ export const toGenerateHtml: CustomMatcher<unknown, any[]> = (
 
   if (pass) {
     return {
-      message: () => `expected ${received} not to generate ${expected}`,
+      message: () =>
+        `expected '${received}' not to generate HTML '${expected}'`,
       pass: true,
     };
   } else {
     return {
       message: () =>
-        `expected ${received} to generate ${expected}, but got ${html}`,
+        `expected '${received}' to generate HTML '${expected}', but got '${html}'`,
       pass: false,
     };
   }

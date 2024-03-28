@@ -1,5 +1,4 @@
 {
-  "include": ["global.d.ts"],
   "compilerOptions": {
     // Enable latest features
     "lib": ["ESNext"],

@@ -1,2 +1,5 @@
 [test]
 preload = "./test-setup.ts"
+
+[env]
+BUN_SHOW_LOGS = "1"
