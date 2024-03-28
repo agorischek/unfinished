@@ -7,3 +7,7 @@ it('should complete strong', () => {
 it('should complete inline code', () => {
   expect('`npm t').toGenerateHtml('<code>npm t</code>');
 });
+
+// it('should ignore strong inside inline code', () => {
+//   expect('`**').toGenerateHtml('<code>**</code>');
+// });

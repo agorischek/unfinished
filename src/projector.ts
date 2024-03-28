@@ -74,9 +74,18 @@ export class InlineCodeNode {
   readonly type = 'inlineCode';
   readonly value: string;
   constructor(node: CstNode) {
-    const firstChild = node.children.InlineCode[0];
-    const value = isCstNode(firstChild) ? '' : firstChild.image;
-    this.value = value;
+    const textContent = node.children.textContent[0];
+    if (isCstNode(textContent)) {
+      // throw new Error(JSON.stringify(textContent, null, 2));
+      const text = textContent.children.Text[0];
+      if (isCstNode(text)) {
+        this.value = '';
+      } else {
+        this.value = text.image;
+      }
+    } else {
+      this.value = textContent.image;
+    }
   }
 }
 
