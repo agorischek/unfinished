@@ -1,14 +1,10 @@
 import type { CstElement, CstNode, IToken } from 'chevrotain';
 import type { PhrasingContent, Root, RootContent } from 'mdast';
 
-import { isCstNode } from './utils/isCstNode';
-import { print } from './utils/print';
+import { isParent, isToken } from './utils/elements';
 
 export function project(el: CstElement): Root {
-  if (!isCstNode(el)) throw 'Invalid input';
-  // throw new Error(JSON.stringify(el, null, 2));
-  // const doc = el.children.document[0];
-  // if (!isCstNode(doc)) throw 'Invalid input';
+  if (isToken(el)) throw 'Invalid input';
   return projectDocument(el);
 }
 
@@ -18,7 +14,7 @@ function projectDocument(doc: CstNode): Root {
 
 function projectDocumentContent(content: CstElement): RootContent {
   // If the content is an IToken, create a new TextNode.
-  if (!isCstNode(content)) return new TextNode(content);
+  if (isToken(content)) return new TextNode(content);
   else {
     // If the content is a CstNode, check its name.
     switch (content.name) {
@@ -35,10 +31,8 @@ function projectDocumentContent(content: CstElement): RootContent {
 }
 
 function projectPhrasingContent(content: CstElement): PhrasingContent {
-  // If the content is an IToken, create a new TextNode.
-  if (!isCstNode(content)) return new TextNode(content);
+  if (isToken(content)) return new TextNode(content);
   else {
-    // If the content is a CstNode, check its name.
     switch (content.name) {
       case 'boldText':
         return new StrongNode(content);
@@ -75,10 +69,9 @@ export class InlineCodeNode {
   readonly value: string;
   constructor(node: CstNode) {
     const textContent = node.children.textContent[0];
-    if (isCstNode(textContent)) {
-      // throw new Error(JSON.stringify(textContent, null, 2));
+    if (isParent(textContent)) {
       const text = textContent.children.Text[0];
-      if (isCstNode(text)) {
+      if (isParent(text)) {
         this.value = '';
       } else {
         this.value = text.image;
@@ -93,9 +86,9 @@ export class TextNode {
   readonly type = 'text';
   readonly value: string;
   constructor(el: CstElement) {
-    if (isCstNode(el)) {
+    if (isParent(el)) {
       const firstChild = el.children.Text[0];
-      if (firstChild && !isCstNode(firstChild)) {
+      if (firstChild && isToken(firstChild)) {
         this.value = firstChild.image;
       } else {
         throw new Error('Invalid input');
@@ -132,63 +125,3 @@ export class TextNode {
 // text: Text;
 // thematicBreak: ThematicBreak;
 // yaml: Yaml;
-
-// export function project(el: CstElement): RootContent[] {
-//   // if (el === undefined) return [];
-
-//   if (isCstNode(el)) {
-//     if (el.name === 'document') {
-//       return Object.values(el.children).flat().flatMap(project);
-//     } else {
-//       return projectPhrasing(el);
-//     }
-//   } else {
-//     return [
-//       {
-//         type: 'text',
-//         value: el.image,
-//       },
-//     ];
-//   }
-// }
-
-// function projectPhrasing(cst: CstElement): PhrasingContent[] {
-//   if (isCstNode(cst)) {
-//     if (cst.name === 'boldText') {
-//       return [
-//         {
-//           type: 'strong',
-//           children: cst.children.textContent.flatMap(projectPhrasing),
-//         },
-//       ];
-//     } else if (cst.name === 'inlineCode') {
-//       // throw cst.children.InlineCode;
-//       return [
-//         {
-//           type: 'inlineCode',
-//           value: cst.children.InlineCode,
-//         },
-//       ];
-//     } else if (cst.name === 'textContent') {
-//       return cst.children.Text.map((child: CstElement) => {
-//         if (!isCstNode(child)) {
-//           return {
-//             type: 'text',
-//             value: child.image,
-//           };
-//         } else {
-//           throw new Error(`Unknown node type: ${child.name}`);
-//         }
-//       });
-//     } else {
-//       throw new Error(`Unknown node type: ${cst.name}`);
-//     }
-//   } else {
-//     return [
-//       {
-//         type: 'text',
-//         value: cst.image,
-//       },
-//     ];
-//   }
-// }
