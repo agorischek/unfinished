@@ -1,7 +1,7 @@
 import { CstParser } from 'chevrotain';
 
 import { lexer } from './lexer';
-import { project } from './projector';
+// import { project } from './projector';
 import {
   Asterisk,
   ClosingBacktick,
@@ -44,17 +44,19 @@ class UnfinishedParser extends CstParser {
   });
 }
 
-export const parse = (input: string) => {
-  const parser = new UnfinishedParser();
+export const parser = new UnfinishedParser();
 
-  const lexed = lexer.tokenize(input);
-  parser.input = lexed.tokens;
+// export const parse = (input: string) => {
+//   const parser = new UnfinishedParser();
 
-  const parsed = parser.content();
-  const projected = project(parsed);
+//   const lexed = lexer.tokenize(input);
+//   parser.input = lexed.tokens;
 
-  return projected;
-};
+//   const parsed = parser.content();
+//   const projected = project(parsed);
 
-const result = parse('`**');
-console.log(result);
+//   return projected;
+// };
+
+// const result = parse('`**');
+// console.log(result);

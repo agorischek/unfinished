@@ -2,7 +2,7 @@ import type { CustomMatcher } from 'bun:test';
 import chalk from 'chalk';
 
 // import { diff } from 'jest-matcher-utils';
-import { parse } from '../parser';
+import { parse } from '../index';
 import { render } from './render';
 
 export const toGenerateHtml: CustomMatcher<unknown, any[]> = (
