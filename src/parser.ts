@@ -2,35 +2,44 @@ import { CstParser } from 'chevrotain';
 
 import { lexer } from './lexer';
 import { project } from './projector';
-import { InlineCode, Strong, Text } from './tokens';
-import { print } from './utils/print';
+import {
+  Asterisk,
+  ClosingBacktick,
+  DoubleAsterisk,
+  OpeningBacktick,
+  Text,
+} from './tokens';
+
+// import { print } from './utils/print';
 
 class UnfinishedParser extends CstParser {
   constructor() {
-    super({ Strong, Text });
+    super({ Asterisk, DoubleAsterisk, OpeningBacktick, ClosingBacktick, Text });
 
     this.performSelfAnalysis();
   }
 
-  public document = this.RULE('document', () => {
+  public content = this.RULE('content', () => {
     this.OR([
       { ALT: () => this.SUBRULE(this.boldText) },
       { ALT: () => this.SUBRULE(this.inlineCode) },
-      { ALT: () => this.SUBRULE(this.textContent) },
+      { ALT: () => this.SUBRULE(this.text) },
     ]);
   });
 
   public boldText = this.RULE('boldText', () => {
-    this.CONSUME(Strong);
-    this.SUBRULE(this.textContent);
+    this.CONSUME(DoubleAsterisk);
+    this.SUBRULE(this.text);
+    this.CONSUME2(DoubleAsterisk);
   });
 
   public inlineCode = this.RULE('inlineCode', () => {
-    this.CONSUME(InlineCode);
-    this.SUBRULE(this.textContent);
+    this.CONSUME(OpeningBacktick);
+    this.SUBRULE(this.text);
+    this.CONSUME(ClosingBacktick);
   });
 
-  public textContent = this.RULE('textContent', () => {
+  public text = this.RULE('text', () => {
     this.CONSUME(Text);
   });
 }
@@ -41,8 +50,11 @@ export const parse = (input: string) => {
   const lexed = lexer.tokenize(input);
   parser.input = lexed.tokens;
 
-  const parsed = parser.document();
+  const parsed = parser.content();
   const projected = project(parsed);
 
   return projected;
 };
+
+const result = parse('`**');
+console.log(result);
